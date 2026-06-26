@@ -346,6 +346,114 @@ GISDocument <- R6::R6Class(
       )
 
       self$.add_source_layer(source_id, source, layer_id, layer)
+    },
+
+    #' @description Add a GeoTIFF Layer to the document.
+    #' @param url The url of the GeoTIFF.
+    #' @param min Minimum pixel value to be displayed, defaults to letting the map display set the value.
+    #' @param max Maximum pixel value to be displayed, defaults to letting the map display set the value
+    #' @param name The name that will be used for the object in the document.
+    #' @param normalize Select whether to normalize values between 0..1, if false than min/max have no effect, defaults to TRUE.
+    #' @param wrapX Render tiles beyond the tile grid extent, defaults to FALSE.
+    #' @param attribution Attribution text.
+    #' @param opacity Layer opacity in [0, 1].
+    #' @return The new layer id.
+    add_geotiff_layer = function(
+      url,
+      min = NULL,
+      max = NULL,
+      name = NULL,
+      normalize = TRUE,
+      wrapX = FALSE,
+      attribution = "",
+      opacity = 1
+    ) {
+      if (is.null(name) && !is.null(url)) {
+        name <- .extract_layer_name(url)
+      }
+
+      source_id <- .uuid()
+      layer_id <- .uuid()
+
+      # R NULL serialises to nothing (key omitted), but the schema expects the
+      # key to be present with a JSON null value. Use NA so that jsonlite /
+      # yr::Prelim$any encodes it as null rather than dropping it entirely.
+      source <- list(
+        type = "GeoTiffSource",
+        name = paste0(name, " Source"),
+        parameters = list(
+          urls = list(
+            list(
+              url = url,
+              min = if (is.null(min)) NA else min,
+              max = if (is.null(max)) NA else max
+            )
+          ),
+          normalize = normalize,
+          wrapX = wrapX
+        )
+      )
+
+      layer <- list(
+        type = "GeoTiffLayer",
+        name = name,
+        visible = TRUE,
+        parameters = list(
+          source = source_id,
+          opacity = opacity
+        )
+      )
+
+      self$.add_source_layer(source_id, source, layer_id, layer)
+    },
+
+    #' @description Add a GeoZarr Layer to the document.
+    #' @param url The url of the GeoZarr.
+    #' @param bands Named band identifiers to load (e.g. c('b04','b03','b02')). When NULL or empty, all bands are loaded in stored order.
+    #' @param name The name that will be used for the object in the document, defaults to "GeoZarr Layer".the filename stem.
+    #' @param gamma Gamma correction applied to all bands (default 1).
+    #' @param opacity Layer opacity in [0, 1].
+    #' @param wrapX: Render tiles beyond the tile grid extent, defaults to FALSE.
+    #' @return The new layer id.
+    add_geozarr_layer = function(
+      url,
+      bands = NULL,
+      name = NULL,
+      opacity = 1,
+      gamma = 1,
+      wrapX = FALSE
+    ) {
+      # Extract name from path if not provided
+      if (is.null(name) && !is.null(url)) {
+        name <- .extract_layer_name(url)
+      }
+
+      source_id <- .uuid()
+      layer_id <- .uuid()
+
+      source <- list(
+        type = "GeoZarrSource",
+        name = paste0(name, " Source"),
+        parameters = list(
+          url = url,
+          # NULL would be omitted; the schema expects an array (possibly empty).
+          bands = if (is.null(bands)) list() else as.list(bands),
+          wrapX = wrapX,
+        )
+      )
+
+      layer <- list(
+        type = "GeoZarrLayer",
+        name = name,
+        visible = TRUE,
+        parameters = list(
+          source = source_id,
+          opacity = opacity,
+          gamma = gamma
+        )
+      )
+
+      self$.add_source_layer(source_id, source, layer_id, layer)
     }
   )
 )
