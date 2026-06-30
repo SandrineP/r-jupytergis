@@ -375,20 +375,19 @@ GISDocument <- R6::R6Class(
       source_id <- .uuid()
       layer_id <- .uuid()
 
-      # R NULL serialises to nothing (key omitted), but the schema expects the
-      # key to be present with a JSON null value. Use NA so that jsonlite /
-      # yr::Prelim$any encodes it as null rather than dropping it entirely.
+      url_entry <- list(url = url)
+      if (!is.null(min)) {
+        url_entry$min <- min
+      }
+      if (!is.null(max)) {
+        url_entry$max <- max
+      }
+
       source <- list(
         type = "GeoTiffSource",
         name = paste0(name, " Source"),
         parameters = list(
-          urls = list(
-            list(
-              url = url,
-              min = if (is.null(min)) NA else min,
-              max = if (is.null(max)) NA else max
-            )
-          ),
+          urls = list(url_entry),
           normalize = normalize,
           wrapX = wrapX
         )
