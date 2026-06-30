@@ -382,12 +382,13 @@ GISDocument <- R6::R6Class(
       if (!is.null(max)) {
         url_entry$max <- max
       }
+      urls_prelim <- yr::Prelim$array(list(url_entry), recursive = TRUE)
 
       source <- list(
         type = "GeoTiffSource",
         name = paste0(name, " Source"),
         parameters = list(
-          urls = list(url_entry),
+          urls = urls_prelim,
           normalize = normalize,
           wrapX = wrapX
         )
