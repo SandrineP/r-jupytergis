@@ -37,6 +37,9 @@ document's CRDT roots (`layers`, `sources`, `options`, `layerTree`,
     \item \href{#method-GISDocument-add_vectortile_layer}{\code{GISDocument$add_vectortile_layer()}}
     \item \href{#method-GISDocument-add_geojson_layer}{\code{GISDocument$add_geojson_layer()}}
     \item \href{#method-GISDocument-add_image_layer}{\code{GISDocument$add_image_layer()}}
+    \item \href{#method-GISDocument-add_geoparquet_layer}{\code{GISDocument$add_geoparquet_layer()}}
+    \item \href{#method-GISDocument-add_geopackage_vector_layer}{\code{GISDocument$add_geopackage_vector_layer()}}
+    \item \href{#method-GISDocument-add_geopackage_raster_layer}{\code{GISDocument$add_geopackage_raster_layer()}}
     \item \href{#method-GISDocument-clone}{\code{GISDocument$clone()}}
   }
 }
@@ -260,6 +263,94 @@ Ignored when the graph declares no spatial extent.}
   }
   \subsection{Returns}{
     The new layer id.
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-GISDocument-add_geoparquet_layer"></a>}}
+\if{latex}{\out{\hypertarget{method-GISDocument-add_geoparquet_layer}{}}}
+\subsection{\code{GISDocument$add_geoparquet_layer()}}{
+  Add a GeoParquet Layer to the document.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{GISDocument$add_geoparquet_layer(path, name = NULL, opacity = 1)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{path}}{The path to the GeoParquet file to embed into the jGIS file.}
+      \item{\code{name}}{The name that will be used for the object in the document.}
+      \item{\code{opacity}}{Layer opacity in [0, 1].}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    The new layer id.
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-GISDocument-add_geopackage_vector_layer"></a>}}
+\if{latex}{\out{\hypertarget{method-GISDocument-add_geopackage_vector_layer}{}}}
+\subsection{\code{GISDocument$add_geopackage_vector_layer()}}{
+  Add a GeoPackage Vector Layer to the document.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{GISDocument$add_geopackage_vector_layer(
+  path,
+  table_names = NULL,
+  name = NULL,
+  type = c("line", "circle", "fill"),
+  opacity = 1
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{path}}{The path to the GeoPackage file to embed into the jGIS file.}
+      \item{\code{table_names}}{A character vector of table names to create layers
+for. If NULL, all feature tables in the GeoPackage are used (local
+files only).}
+      \item{\code{name}}{The name that will be used for the object in the document.}
+      \item{\code{type}}{The type of the vector layer to create: "circle", "fill",
+or "line".}
+      \item{\code{opacity}}{Layer opacity in [0, 1].}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    A list of the new layer ids (one per table).
+  }
+}
+
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-GISDocument-add_geopackage_raster_layer"></a>}}
+\if{latex}{\out{\hypertarget{method-GISDocument-add_geopackage_raster_layer}{}}}
+\subsection{\code{GISDocument$add_geopackage_raster_layer()}}{
+  Add a GeoPackage Raster Layer to the document
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{GISDocument$add_geopackage_raster_layer(
+  path,
+  table_names = NULL,
+  name = NULL,
+  attribution = "",
+  opacity = 1
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{path}}{The path to the GeoPackage file.}
+      \item{\code{table_names}}{A list of table names to create layers for.}
+      \item{\code{name}}{The name that will be used for the object in the document.}
+      \item{\code{attribution}}{The attribution.}
+      \item{\code{opacity}}{The opacity, between 0 and 1.}
+    }
+    \if{html}{\out{</div>}}
   }
 }
 
